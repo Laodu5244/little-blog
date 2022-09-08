@@ -5,14 +5,17 @@
       <img src="@/assets/images/main.svg">
     </div>
     <Footer></Footer>
+    <!-- user -->
+    <User></User>
   </div>
 </template>
 
 <script>
 import Footer from '@/components/Footer.vue'
 import LeftNav from '@/components/LeftNav.vue'
+import User from '@/components/User.vue'
 export default {
-  components: { Footer,LeftNav },
+  components: { Footer,LeftNav ,User},
 
 }
 </script>
@@ -26,10 +29,10 @@ export default {
   right:0;
   background-color: rgb(102, 87, 199);
   img{
-  width:40vw;
-  margin: 100px auto;
-  display: block;
-}
+    width:40vw;
+    margin: 100px auto;
+    display: block;
+  }
 }
 
 </style>

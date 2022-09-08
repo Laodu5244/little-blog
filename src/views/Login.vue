@@ -7,11 +7,11 @@
         <div class="face">
           <div class="eye-shadow left"></div>
           <div class="eye-white left">
-            <div class="eye-ball"></div>
+            <div class="eye-ball" ref="eye1"></div>
           </div>
           <div class="eye-shadow right"></div>
           <div class="eye-white right">
-            <div class="eye-ball"></div>
+            <div class="eye-ball" ref="eye2"></div>
           </div>
           <div class="nose"></div>
           <div class="mouth"></div>
@@ -24,23 +24,22 @@
           <div class="sole"></div>
         </div>
       </div>
-      <div class="login-box">
+      <div class="login-box" ref="login_box">
         <div class="hand left"></div>
         <div class="hand right"></div>
-        <h1>登录</h1>
+        <h1>登 录</h1>
         <div class="ipt-box">
           <input 
+          @click="click_user"
           type="text" 
-          v-model="user.username" 
-          placeholder="用户名"/>
+          v-model="user.username" />
           <label>用户名</label>
         </div>
         <div class="ipt-box">
           <input 
           type="password" 
-          id="password"
-          v-model="user.password" 
-          placeholder="密码"/>
+          @click="click_pass"
+          v-model="user.password"/>
           <label>密码</label>
         </div>
         <button @click="toHome">登录</button>
@@ -50,7 +49,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data(){
     return{
@@ -60,16 +58,39 @@ export default {
       }
     }
   },
+  mounted(){
+    this.eye_move()
+  },
+  beforeDestroy(){
+    document.onmousemove = null
+  },
   methods:{
+    eye_move(){
+      document.onmousemove = (e)=>{
+        var x = e.clientX / 80
+        var y = e.clientY / 40
+        this.$refs.eye1.style.left = x + 'px'
+        this.$refs.eye1.style.top = y + 'px'
+        this.$refs.eye2.style.left = x + 'px'
+        this.$refs.eye2.style.top = y + 'px'
+      }
+    },
+    click_user(){
+      this.$refs.login_box.classList.remove('up')
+    },
+    click_pass(){
+      this.$refs.login_box.classList.add('up')
+    },
+    // 跳转首页
     toHome(){
-      if(this.user.username.length<4 || this.user.username.length>18){
+      if(this.user.username.length<5 || this.user.username.length>18){
         this.$message({
           message: "用户名不正确",
           type: "warning",
           center: true,
           plain: true,
         });
-      }else if(this.user.password.length<4 || this.user.password.length>18){
+      }else if(this.user.password.length<5 || this.user.password.length>18){
         this.$message({
           message: "密码不正确",
           type: "warning",
@@ -81,13 +102,15 @@ export default {
         formData.append("username", this.user.username);
         formData.append("password", this.user.password);
 
-        axios.post('http://116.205.171.139:8080/login',formData)
+        this.axios.post('http://116.205.171.139:8080/login',formData)
         .then(res =>{
+          let user = res.data.username
+          this.$store.commit('get_User',user)
+          localStorage.setItem("token",res.data.token);  
           if(res.data.code === -1){
             this.toRegister()
           }else{
-            this.bus.$emit('uuu',res.data.username)
-            this.$router.push('/home') 
+            this.$router.push(`/home?cat_name=PHP`) 
             this.$message({
               type: "success",
               showClose: true,
@@ -118,7 +141,7 @@ export default {
         console.log('已经返回')
       })
     }
-  }
+  },
 };
 </script>
 
@@ -128,7 +151,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(200deg, #37e2b2, #2fa080);
+  background: linear-gradient(200deg, #119e15, #0842d6);
 }
 
 /* 开始画熊猫 */
@@ -207,6 +230,7 @@ export default {
   background-color: #000;
   border-radius: 100%;
   position: absolute;
+  transform: translate(-5px, -5px);
   left: 5px;
   top: 5px;
 }
@@ -378,6 +402,7 @@ h1 {
   text-indent: 5px;
   outline: none;
   transition: 0.3s;
+  color:#555;
 }
 
 .ipt-box label {
@@ -385,23 +410,19 @@ h1 {
   left: 5px;
   top: 5px;
   font-size: 14px;
-  color: #888;
+  color: #555;
   transition: 0.3s;
   pointer-events: none;
 }
 
-/* 输入框选中或有值时输入框的样式 */
-.ipt-box input:focus,
-.ipt-box input:valid {
+.ipt-box input:focus{
   border-color: #1dc797;
   box-shadow: 0 1px #1dc797;
 }
 
-/* 输入框选中或有值时label的样式 */
 .ipt-box input:focus ~ label,
 .ipt-box input:valid ~ label {
   color: #1dc797;
-  font-size: 12px;
   transform: translateY(-15px);
 }
 

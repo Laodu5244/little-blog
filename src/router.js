@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: '/home',
-    component: () => import('@/views/Home')
+    component: () => import('@/views/Home'),
   },
   {
     path: '/add',
@@ -29,6 +29,15 @@ const routes = [
     path: '/register',
     component: () => import('@/views/Register')
   },
+  {
+    path: '/content',
+    component: () => import('@/views/Content')
+  },
+  {
+    path: '/blog',
+    component: () => import('@/views/Blog')
+  },
+
 ]
 
 const router = new VueRouter({

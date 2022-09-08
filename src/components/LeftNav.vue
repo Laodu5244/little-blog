@@ -1,6 +1,6 @@
 <template>
   <div class="left-nav">
-    <img src="@/assets/images/logo.svg" @click="toHome"/>
+    <img src="@/assets/images/logo.svg" @click="toAbout"/>
     <div class="container">
       <router-link to="/home" exact>
         <i class="el-icon-reading"></i>
@@ -9,6 +9,10 @@
       <router-link to="/classify" exact>
         <i class="el-icon-tickets"></i>
         <div>分类</div>
+      </router-link>
+       <router-link to="/Blog" exact>
+        <i class="el-icon-tickets"></i>
+        <div>博客</div>
       </router-link>
       <router-link to="/add" exact>
         <i class="el-icon-edit-outline"></i>
@@ -27,9 +31,10 @@
 
 <script>
 export default {
+  name:'LeftNav',
   methods:{
-    toHome(){
-      this.$confirm("返回登录页?", "提示", {
+    toAbout(){
+      this.$confirm("前往个人中心?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -39,9 +44,12 @@ export default {
           showClose: true,
           message: "已经成功跳转",
         });
-        this.$router.push('/')
-      }).catch((err) =>{
-        console.log(err)
+        this.$router.push('/about')
+      }).catch(() =>{
+        this.$message({
+          type: "success",
+          message: "已经返回",
+        });
       })
     },
   }
@@ -50,6 +58,7 @@ export default {
 
 <style scoped lang="less">
 .left-nav {
+  z-index: 99;
   position: fixed;
   top: 0;
   left: 0;

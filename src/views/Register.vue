@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="login">
     <div class="container">
       <div class="panda">
         <div class="ear left"></div>
@@ -7,11 +7,11 @@
         <div class="face">
           <div class="eye-shadow left"></div>
           <div class="eye-white left">
-            <div class="eye-ball"></div>
+            <div class="eye-ball" ref="eye1"></div>
           </div>
           <div class="eye-shadow right"></div>
           <div class="eye-white right">
-            <div class="eye-ball"></div>
+            <div class="eye-ball" ref="eye2"></div>
           </div>
           <div class="nose"></div>
           <div class="mouth"></div>
@@ -24,21 +24,22 @@
           <div class="sole"></div>
         </div>
       </div>
-      <div class="login-box">
+      <div class="login-box" ref="login_box">
         <div class="hand left"></div>
         <div class="hand right"></div>
-        <h1>注册</h1>
+        <h1>注 册</h1>
         <div class="ipt-box">
-          <input type="text" v-model="user.username" placeholder="用户名" />
+          <input 
+          @click="click_user"
+          type="text" 
+          v-model="user.username" />
           <label>用户名</label>
         </div>
         <div class="ipt-box">
-          <input
-            type="password"
-            id="password"
-            v-model="user.password"
-            placeholder="密码"
-          />
+          <input 
+          type="password" 
+          @click="click_pass"
+          v-model="user.password"/>
           <label>密码</label>
         </div>
         <button @click="toHome">注册</button>
@@ -58,7 +59,29 @@ export default {
       },
     };
   },
+  mounted(){
+    this.eye_move()
+  },
+  beforeDestroy(){
+    document.onmousemove = null
+  },
   methods: {
+    eye_move(){
+      document.onmousemove = (e)=>{
+        var x = e.clientX / 80
+        var y = e.clientY / 40
+        this.$refs.eye1.style.left = x + 'px'
+        this.$refs.eye1.style.top = y + 'px'
+        this.$refs.eye2.style.left = x + 'px'
+        this.$refs.eye2.style.top = y + 'px'
+      }
+    },
+    click_user(){
+      this.$refs.login_box.classList.remove('up')
+    },
+    click_pass(){
+      this.$refs.login_box.classList.add('up')
+    },
     toHome() {
       if (this.user.username.length < 4 || this.user.username.length > 18) {
         this.$message({
@@ -110,12 +133,12 @@ export default {
 </script>
 
 <style scoped>
-.register {
+.login {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(200deg, #58659a, #58659a);
+  background: linear-gradient(150deg, rgb(147, 147, 6), #db1208);
 }
 
 /* 开始画熊猫 */
@@ -194,6 +217,7 @@ export default {
   background-color: #000;
   border-radius: 100%;
   position: absolute;
+  transform: translate(-5px, -5px);
   left: 5px;
   top: 5px;
 }
@@ -346,7 +370,7 @@ export default {
 }
 
 h1 {
-  color: #58659a;
+  color: darkorange;
   font-weight: normal;
   margin-bottom: 5px;
 }
@@ -365,6 +389,7 @@ h1 {
   text-indent: 5px;
   outline: none;
   transition: 0.3s;
+  color:#555;
 }
 
 .ipt-box label {
@@ -372,30 +397,26 @@ h1 {
   left: 5px;
   top: 5px;
   font-size: 14px;
-  color: #888;
+  color: #555;
   transition: 0.3s;
   pointer-events: none;
 }
 
-/* 输入框选中或有值时输入框的样式 */
-.ipt-box input:focus,
-.ipt-box input:valid {
-  border-color: #58659a;
-  box-shadow: 0 1px #58659a;
+.ipt-box input:focus{
+  border-color: darkorange;
+  box-shadow: 0 1px darkorange;
 }
 
-/* 输入框选中或有值时label的样式 */
 .ipt-box input:focus ~ label,
 .ipt-box input:valid ~ label {
-  color: #58659a;
-  font-size: 12px;
+  color: darkorange;
   transform: translateY(-15px);
 }
 
 button {
   width: 150px;
   height: 40px;
-  background-color: #58659a;
+  background-color: darkorange;
   border: none;
   border-radius: 3px;
   margin-top: 30px;
@@ -410,7 +431,7 @@ button {
 button:hover {
   letter-spacing: 25px;
   text-indent: 25px;
-  background-color: #58659a;
+  background-color: orange;
 }
 
 /* 登录框向上举 */

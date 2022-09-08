@@ -2,6 +2,8 @@
   <div class="blog">
     <LeftNav></LeftNav>
     <Header></Header>
+    <!-- user -->
+    <User></User>
     <div class="box">
       <form>
         <label>
@@ -43,19 +45,17 @@
       </form>
       <div v-show="show">
         <h3>博客预览</h3>
-        <Blog :item="item" />
       </div>
-    </div>
+    </div> 
   </div>
 </template>
 
 <script>
-import Blog from "@/components/Blog.vue";
 import LeftNav from "@/components/LeftNav.vue";
-import Footer from "@/components/Footer.vue";
 import Header from "@/components/Header.vue";
+import User from "@/components/User.vue";
 export default {
-  components: { Blog, LeftNav, Footer, Header },
+  components: { LeftNav, Header,User },
   data() {
     return {
       item: {

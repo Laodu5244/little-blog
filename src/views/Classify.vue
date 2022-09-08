@@ -1,27 +1,48 @@
 <template>
   <div class="classify">
     <LeftNav></LeftNav>
-    <h3>技术栈</h3>
+    <h3>{{title}}</h3>
     <div class="main">
-      <el-button type="success" icon="el-icon-collection-tag" @click="toHome">HTML+Css</el-button>
-      <el-button type="success" icon="el-icon-collection-tag" @click="toHome">JavaScript</el-button>
-      <el-button type="success" icon="el-icon-collection-tag" @click="toHome">jQuery</el-button>
-      <el-button type="success" icon="el-icon-collection-tag" @click="toHome">NodeJS</el-button>
-      <el-button type="success" icon="el-icon-collection-tag" @click="toHome">webpack</el-button>
-      <el-button type="success" icon="el-icon-collection-tag" @click="toHome">微信小程序</el-button>
-      <el-button type="success" icon="el-icon-collection-tag" @click="toHome">VueJS</el-button>
+      <el-button 
+      class="item-class"
+        type="success"  
+        @click="toHome(item.cat_name)"
+        v-for="item in list"
+        :key="item.id"
+      >{{item.cat_name}}</el-button>
     </div>
+
+    <!-- 添加 -->
+    <el-button 
+      class="add" 
+      icon="el-icon-edit" 
+      type="text"
+      @click="open"
+    >添加新分类</el-button>
+    <!-- user -->
+    <User></User>
   </div>
 </template>
 
 <script>
 import LeftNav from '@/components/LeftNav.vue'
-import Footer from '@/components/Footer.vue'
+import User from '@/components/User.vue'
 export default {
-  components: { LeftNav, Footer },
+  components: { LeftNav, User },
+  data(){
+    return{
+      title:"分类索引",
+      list:[]
+    }
+  },
+  created(){
+    this.getList()
+  },
   methods:{
-    toHome(){
-      this.$router.push('/home')
+    // 返回主页
+    toHome(cat){
+      this.$router.push(`/home?cat_name=${cat}`)
+      console.log(cat)
       setTimeout(() => {
         window.scrollTo({
           top: document.body.clientHeight,
@@ -29,7 +50,47 @@ export default {
           behavior: "smooth"
         })
       }, 200);
-    }
+    },
+    // 获取列表
+    async getList(){
+      let token = localStorage.getItem('token')
+      let formData = new FormData();
+      formData.append("token", token);
+      let res = await this.axios.post('http://116.205.171.139:8080/get_cat',formData)
+      this.list = res.data
+    },
+    // 添加新分支
+    open(){
+      this.$prompt('请输入新分支', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        if(value.trim() == ''){
+          this.$message({
+            type: 'info',
+            message: '输入不能为空'
+          });
+        }else{
+          // 调用后台接口添加
+          let token = localStorage.getItem('token')
+          let formData = new FormData();
+          formData.append("token", token);
+          formData.append("cat_name", value);
+          this.axios.post('http://116.205.171.139:8080/add_cat',formData)
+
+          setTimeout(()=>{ this.getList() })  
+          this.$message({
+            type: 'success',
+            message: '新分支是: ' + value
+          })  
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });       
+      });
+    },
   }
 }
 </script>
@@ -39,22 +100,29 @@ export default {
   margin-left: 168px;
 }
 h3{
-  margin: 30px auto;
-  padding-left: 6vw;
-  width:25vw;
+  margin: 30px;
+  text-align: center;
   color:#333;
-  font-size: 4.5vw;
+  font-size: 40px;
   font-family: '楷体';
 }
 .main{
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
   justify-content:center;
-  /* align-items: center; */
-  margin: 64px auto;
-  width:20vw;
+  align-items: center;
 }
-.el-button{
+.item-class{
   margin: 5px;
+  width:150px;
+  font-size: 20px;
+}
+.add{
+  position:absolute;
+  top: 20px;
+  left: 185px;
+  margin: 5px;
+  font-size: 16px;
+
 }
 </style>
