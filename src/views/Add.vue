@@ -3,35 +3,52 @@
     <LeftNav></LeftNav>
     <Header></Header>
     <User></User>
+
     <div class="box">
+      <!-- 标题 -->
       <label>标题:
         <input
           type="text"
-          v-model="item.title"
+          v-model="new_blog.title"
           class="input"
           placeholder="请输入"
         />
       </label>
 
-      <label class="classify">
-        分类:
-        <select v-model="item.classify">
+      <!-- 分类 -->
+      <label class="classify">分类:
+        <select v-model="new_blog.classify">
           <option v-for="item in classList" :key="item.id">
             {{ item.cat_name }}
           </option>
         </select>
       </label>
 
-      <label
-        >内容: <textarea rows="6" v-model="item.content"></textarea>
+      <!-- 内容 -->
+      <label>内容: 
+        <textarea rows="6" v-model="new_blog.content"></textarea>
       </label>
+
+      <!-- 提交 -->
       <div class="btn">
         <el-button type="danger" @click.prevent="clear">清空内容</el-button>
         <el-button type="success" @click.prevent="add">提交博客</el-button>
       </div>
+
+      <!-- 博客预览 -->
       <div v-show="show">
         <h3>博客预览</h3>
+        <div class="itembox">
+          <div class="top">
+            <h3>{{ new_blog.title }}</h3>
+          </div>
+          <div class="content">
+            {{ new_blog.content  }}
+          </div>
+          <div class="classify">技术种类: {{new_blog.classify}}</div>
+        </div>
       </div>
+
     </div> 
   </div>
 </template>
@@ -45,10 +62,8 @@ export default {
   data() {
     return {
       classList: [],
-      item: {
+      new_blog: {
         title: "",
-        posttime: Date.now() / 1000,
-        author: "",
         classify: "",
         content: "",
       },
@@ -74,54 +89,62 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        this.item.title = "";
-        this.item.author = "";
-        this.item.classify = "";
-        this.item.content = "";
+        this.new_blog.title = "";
+        this.new_blog.classify = "";
+        this.new_blog.content = "";
         this.$message({
           type: "success",
           showClose: true,
           message: "删除成功!",
         });
-      });
+      }).catch(() =>{
+        console.log('已经返回')
+      })
     },
     // 添加博客
     add() {
       if (
-        this.item.title == "" ||
-        this.item.author == "" ||
-        this.item.classify == "" ||
-        this.item.content == ""
+        this.new_blog.title == "" ||
+        this.new_blog.classify == "" ||
+        this.new_blog.content == ""
       ) {
         this.$alert("输入不能为空", {
           confirmButtonText: "确定",
         });
         return;
       }
-      this.axios({
-        url: "https://ku.qingnian8.com/dataApi/blog/addBlog.php",
-        params: this.item,
-      }).then((res) => {
-        console.log(res);
-        this.item.title = "";
-        this.item.author = "";
-        this.item.classify = "";
-        this.item.content = "";
-      });
+      // 调用添加接口
+      this.get_add()
+    },
+    // 添加接口
+    async get_add(){
+      let token = localStorage.getItem('token')
+      let formData = new FormData();
+      formData.append("token", token);
+      formData.append("cat_name", this.new_blog.classify);
+      formData.append("title", this.new_blog.title);
+      formData.append("contents", this.new_blog.content);
+      
+      let res = await this.axios.post('http://116.205.171.139:8080/add_article',formData)
+      console.log(res)
+      this.new_blog.title = "";
+      this.new_blog.classify = "";
+      this.new_blog.content = "";
+
       this.$router.push("/home");
       this.$message({
         type: "success",
         showClose: true,
         message: "发布成功!",
-      });
+      })   
     },
   },
+  // 实时预览
   updated() {
     if (
-      this.item.title ||
-      this.item.author ||
-      this.item.classify ||
-      this.item.content
+      this.new_blog.title ||
+      this.new_blog.classify ||
+      this.new_blog.content
     ) {
       this.show = true;
     } else {
@@ -132,10 +155,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+.add{
+  margin-left:168px;
+}
 .box {
-  position: fixed;
-  left: 168px;
-  right: 0;
   margin: 80px;
   padding: 10px;
 }
@@ -183,5 +206,37 @@ textarea {
   display: flex;
   justify-content: center;
   margin: 15px 0;
+}
+.btn .el-button{
+  margin: 20px 30px;
+}
+
+.itembox {
+  margin-bottom: 98px;
+  .top {
+    margin: 0 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+      font-size: 23px;
+      color: orangered;
+      word-wrap: break-word;
+      overflow: hidden;
+      cursor: pointer;
+    }
+  }
+  .content {
+    padding: 10px;
+    background-color: #e5e5e5;
+    font-size: 14px;
+    margin: 5px 0;
+    width: 100%;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+  .classify{
+    margin-left: 12px;
+  }
 }
 </style>

@@ -1,8 +1,10 @@
 <template>
   <div class="blog_list">
+
     <LeftNav></LeftNav>
     <Header></Header>
     <User></User> 
+
     <div class="main">
       <List></List>   
     </div>
@@ -26,12 +28,11 @@ export default {
 </script>
 
 <style scoped lang="less">
-.main {
-  position: fixed;
-  left: 168px;
-  right: 0;
-  top: 0;
-  margin-left: 168px;
-  margin-bottom: 50px;
+.blog_list{
+  margin-left:168px;
+}
+.main{
+  margin: 80px;
+  padding: 10px;
 }
 </style>

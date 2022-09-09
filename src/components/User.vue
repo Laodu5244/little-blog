@@ -13,11 +13,13 @@ export default {
   },
   methods:{
     toLogin(){
-      this.$confirm("返回登录页?", "提示", {
+      this.$confirm("您的浏览信息会清空,确定返回登录页?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('username')
         this.$message({
           type: "success",
           showClose: true,
@@ -37,7 +39,7 @@ export default {
   position: fixed;
   top: 20px;
   right: 20px;
-  background-color: rgba(237, 153, 8, 0.5);
+  background-color: rgba(46, 66, 248, 0.5);
   color: #fff;
   padding: 12px;
   padding-top: 5px;
@@ -47,6 +49,6 @@ export default {
   cursor: pointer;
 }
 .user:hover{
-  background-color: rgba(237, 153, 8, 0.8);
+  background-color: rgb(46, 66, 248);
 }
 </style>

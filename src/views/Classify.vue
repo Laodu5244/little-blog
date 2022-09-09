@@ -73,7 +73,7 @@ export default {
           formData.append("cat_name", value);
           this.axios.post('http://116.205.171.139:8080/add_cat',formData)
 
-          setTimeout(()=>{ this.getList() })  
+          this.getList() 
           this.$message({
             type: 'success',
             message: '新分支是: ' + value
@@ -107,6 +107,7 @@ h3{
   flex-direction: column; 
   justify-content:center;
   align-items: center;
+  margin-bottom: 100px;
 }
 .item-class{
   margin: 5px;

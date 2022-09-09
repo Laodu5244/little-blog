@@ -9,7 +9,7 @@
       :item="item" 
     >
       <div class="top">
-        <h3 @click="toContent">{{ item.title | snippet }}</h3>
+        <h3 @click="toContent(item.id)">{{ item.title | snippet }}</h3>
       </div>
       <div class="content">
         {{ item.contents | snippet2 }}
@@ -72,7 +72,6 @@ export default {
       if(this.blogList.length !==0){
         this.isShow = true
       }
-      console.log(this.blogList)
     },
     // 点击上一页
     last() {
@@ -121,8 +120,8 @@ export default {
       }, 200);
     },
     // 跳转内容页
-    toContent(){
-      this.$router.push('/content')
+    toContent(id){
+      this.$router.push(`/content?id=${id}`)
     },
     // 跳转添加页
     toAdd(){
@@ -133,25 +132,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.show {
-  position: fixed;
-  left: 168px;
-  right: 0;
-  margin: 80px auto;
-  padding: 50px 100px;
-}
+
 h2{
   text-align: center;
   margin-bottom: 50px;
   color: #666;
   font-size: 32px;
 }
+
 .page {
   margin-top: 30px;
   display: flex;
   justify-content: center;
   .el-button{
-    margin: 0 100px;
+    margin: 0 35px;
   }
 }
 
