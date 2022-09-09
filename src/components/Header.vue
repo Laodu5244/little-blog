@@ -1,19 +1,38 @@
 <template>
-  <div class="header" ref="head">
+  <div class="header">
     <div class="logo">
       <div class="text">Vue 博客系统</div>
     </div>
     <div class="nav">
-      <router-link to="/home" exact>博客列表</router-link>
-      <router-link to="/add" exact>添加博客</router-link>
+      <router-link to="/blog" exact @click='change'>
+        博客列表
+      </router-link>
+      <router-link to="/add" exact @click='change'>
+        添加博客
+      </router-link>
     </div>
   </div>
 </template>
 
+<script>
+export default{
+  data(){
+    return{
+      
+    }
+  },
+  methods:{
+    change(i){
+      console.log(i)
+    }
+  }
+}
+</script>
+
 <style lang="less" scoped>
 .header {
-  position: absolute;
-  left: 0;
+  position: fixed;
+  left: 168px;
   top: 0;
   right: 0;
   box-shadow: 0 0 20px rgba(65, 184, 131, 0.5);

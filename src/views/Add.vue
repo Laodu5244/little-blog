@@ -1,48 +1,34 @@
 <template>
-  <div class="blog">
+  <div class="add">
     <LeftNav></LeftNav>
     <Header></Header>
-    <!-- user -->
     <User></User>
     <div class="box">
-      <form>
-        <label>
-          标题:
-          <input
-            type="text"
-            v-model="item.title"
-            class="title"
-            placeholder="请输入"
-          />
-        </label>
+      <label>标题:
+        <input
+          type="text"
+          v-model="item.title"
+          class="input"
+          placeholder="请输入"
+        />
+      </label>
 
-        <label class="author">
-          作者:
-          <input
-            type="text"
-            v-model="item.author"
-            placeholder="请输入"
-            class="title"
-          />
-        </label>
+      <label class="classify">
+        分类:
+        <select v-model="item.classify">
+          <option v-for="item in classList" :key="item.id">
+            {{ item.cat_name }}
+          </option>
+        </select>
+      </label>
 
-        <label class="classify">
-          分类:
-          <select v-model="item.classify">
-            <option v-for="item in classList" :key="item.id">
-              {{ item.classname }}
-            </option>
-          </select>
-        </label>
-
-        <label
-          >内容: <textarea rows="3" v-model="item.content"></textarea>
-        </label>
-        <div class="btn">
-          <el-button type="danger" @click.prevent="clear">清空内容</el-button>
-          <el-button type="success" @click.prevent="add">提交博客</el-button>
-        </div>
-      </form>
+      <label
+        >内容: <textarea rows="6" v-model="item.content"></textarea>
+      </label>
+      <div class="btn">
+        <el-button type="danger" @click.prevent="clear">清空内容</el-button>
+        <el-button type="success" @click.prevent="add">提交博客</el-button>
+      </div>
       <div v-show="show">
         <h3>博客预览</h3>
       </div>
@@ -55,9 +41,10 @@ import LeftNav from "@/components/LeftNav.vue";
 import Header from "@/components/Header.vue";
 import User from "@/components/User.vue";
 export default {
-  components: { LeftNav, Header,User },
+  components: { LeftNav, Header, User },
   data() {
     return {
+      classList: [],
       item: {
         title: "",
         posttime: Date.now() / 1000,
@@ -66,16 +53,19 @@ export default {
         content: "",
       },
       show: false,
-      classList: [],
     };
   },
+  created() {
+    this.getList();
+  },
   methods: {
-    getClass() {
-      this.axios
-        .get("https://ku.qingnian8.com/dataApi/blog/classBlog.php")
-        .then((res) => {
-          this.classList = res.data;
-        });
+    // 获取列表
+    async getList(){
+      let token = localStorage.getItem('token')
+      let formData = new FormData();
+      formData.append("token", token);
+      let res = await this.axios.post('http://116.205.171.139:8080/get_cat',formData)
+      this.classList = res.data
     },
     // 清除数据
     clear() {
@@ -126,9 +116,6 @@ export default {
       });
     },
   },
-  created() {
-    this.getClass();
-  },
   updated() {
     if (
       this.item.title ||
@@ -141,41 +128,18 @@ export default {
       this.show = false;
     }
   },
-  beforeDestroy(){  
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.clientHeight,
-        // 滚动效果
-        behavior: "smooth"
-      })
-    },200);
-  }
 };
 </script>
 
 <style scoped lang="less">
-.blog {
-  position: fixed;
-  left: 168px;
-  right: 0;
-  margin: 0 auto;
-  padding: 10px;
-  margin-bottom: 50px;
-}
 .box {
-  height: 3000px;
   position: fixed;
   left: 168px;
   right: 0;
-  margin: 0 auto;
-  max-width: 600px;
+  margin: 80px;
   padding: 10px;
-  margin-bottom: 50px;
-  form {
-    margin-top: 90px;
-  }
 }
-.blog h3 {
+.box h3 {
   text-align: center;
   font-family: "kaiti";
   color: darkolivegreen;
@@ -184,28 +148,31 @@ export default {
 }
 label {
   display: block;
-  margin: 15px 0 10px;
+  margin: 15px;
   color: darkorange;
 }
 select {
+  height: 32px;
+  margin-left: 20px;
   border: 2px solid skyblue;
   border-radius: 5px;
-  width: 200px;
+  width: 240px;
   outline: none;
 }
 textarea {
   display: block;
   width: 100%;
   padding: 8px;
-  margin: 8px;
+  margin: 12px 0;
   border: 2px solid skyblue;
   border-radius: 5px;
   outline: none;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
 }
-.title {
-  height: 30px;
-  width: 260px;
+.input {
+  margin-left: 20px;
+  height: 32px;
+  width: 500px;
   border: 2px solid skyblue;
   border-radius: 5px;
   outline: none;

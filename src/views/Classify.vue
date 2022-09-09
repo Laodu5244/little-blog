@@ -6,7 +6,7 @@
       <el-button 
       class="item-class"
         type="success"  
-        @click="toHome(item.cat_name)"
+        @click="toBlog(item.cat_name)"
         v-for="item in list"
         :key="item.id"
       >{{item.cat_name}}</el-button>
@@ -39,17 +39,12 @@ export default {
     this.getList()
   },
   methods:{
-    // 返回主页
-    toHome(cat){
-      this.$router.push(`/home?cat_name=${cat}`)
-      console.log(cat)
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.body.clientHeight,
-          // 滚动效果
-          behavior: "smooth"
-        })
-      }, 200);
+    // 跳转博客列表
+    toBlog(cat){
+      // 获取点击的分支,存入vuex
+      this.$store.commit('param',cat)
+      // 跳转到博客页
+      this.$router.push('/blog')
     },
     // 获取列表
     async getList(){
@@ -103,8 +98,9 @@ h3{
   margin: 30px;
   text-align: center;
   color:#333;
-  font-size: 40px;
+  font-size: 45px;
   font-family: '楷体';
+  letter-spacing: 15px;
 }
 .main{
   display: flex;

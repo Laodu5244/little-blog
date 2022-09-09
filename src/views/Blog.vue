@@ -2,7 +2,11 @@
   <div class="blog_list">
     <LeftNav></LeftNav>
     <Header></Header>
-    <List></List>   
+    <User></User> 
+    <div class="main">
+      <List></List>   
+    </div>
+    
   </div>
 </template>
 
@@ -10,23 +14,24 @@
 import Header from "@/components/Header.vue";
 import LeftNav from "@/components/LeftNav.vue";
 import List from "@/components/List.vue";
+import User from "@/components/User.vue";
 export default {
   components: {
       Header,
       LeftNav,
-      Cover,
-      Show,
+      List,
       User,
     },
 }
 </script>
 
-<style>
+<style scoped lang="less">
 .main {
-  position: absolute;
-  bottom: 5px;
+  position: fixed;
   left: 168px;
   right: 0;
-  height: 100vh;
+  top: 0;
+  margin-left: 168px;
+  margin-bottom: 50px;
 }
 </style>

@@ -1,28 +1,18 @@
 <template>
   <div class="left-nav">
     <img src="@/assets/images/logo.svg" @click="toAbout"/>
+
     <div class="container">
-      <router-link to="/home" exact>
-        <i class="el-icon-reading"></i>
-        <div>主页</div>
-      </router-link>
-      <router-link to="/classify" exact>
-        <i class="el-icon-tickets"></i>
-        <div>分类</div>
-      </router-link>
-       <router-link to="/Blog" exact>
-        <i class="el-icon-tickets"></i>
-        <div>博客</div>
-      </router-link>
-      <router-link to="/add" exact>
-        <i class="el-icon-edit-outline"></i>
-        <div>添加</div>
-      </router-link>
-      <router-link to="/about" exact>
-        <i class="el-icon-s-custom"></i>
-        <div>关于</div>
+      <router-link 
+        :to="item.path" 
+        exact 
+        v-for="item in nav_list" 
+        :key="item.id"
+      > <i :class="item.icon"></i>
+        <div>{{item.name}}</div>
       </router-link>
     </div>
+
     <div class="github">
       <a href="https://github.com/Laodu5244">Github</a>
     </div>
@@ -31,7 +21,17 @@
 
 <script>
 export default {
-  name:'LeftNav',
+  data(){
+    return{
+      nav_list:[
+        { id:1,name:'主页',path:'/home',icon:'el-icon-notebook-1' },
+        { id:2,name:'分类',path:'/classify',icon:'el-icon-tickets' }, 
+        { id:3,name:'博客',path:'/blog',icon:'el-icon-reading' },
+        { id:4,name:'添加',path:'/add',icon:'el-icon-edit-outline' },
+        { id:5,name:'关于',path:'/about',icon:'el-icon-s-custom' },
+      ]
+    }
+  },
   methods:{
     toAbout(){
       this.$confirm("前往个人中心?", "提示", {
@@ -105,7 +105,6 @@ export default {
   bottom:50px;
   left: 50%;
   transform: translateX(-50%);
-  
 }
 .github a:hover{
   color:#41b883;

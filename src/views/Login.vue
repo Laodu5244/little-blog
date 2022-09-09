@@ -66,6 +66,10 @@ export default {
   },
   methods:{
     eye_move(){
+      this.$refs.eye1.style.left = 8 + 'px'
+      this.$refs.eye1.style.top = 8 + 'px'
+      this.$refs.eye2.style.left = 8 + 'px'
+      this.$refs.eye2.style.top = 8 + 'px'
       document.onmousemove = (e)=>{
         var x = e.clientX / 80
         var y = e.clientY / 40

@@ -1,6 +1,6 @@
 <template>
   <div class="show">
-    <h2 v-if="isShow">关于{{title}}的文章</h2>
+    <h2 v-if="isShow">关于{{title || 'PHP'}}的文章</h2>
     
     <div 
       class="itembox"
@@ -21,7 +21,7 @@
       <el-button type="success" :plain="false" @click="last">上一页</el-button>
       <el-button type="success" :plain="false" @click="next">下一页</el-button>
     </div>
-    <h2 v-else>暂时没有文章,去添加?</h2>
+    <h2 v-else @click="toAdd" style="cursor:pointer">暂时没有文章,去添加?</h2>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ export default {
     };
   },
   created() {
-    this.title = this.$route.query.cat_name
+    this.title = this.$store.state._param
     this.getData();
   },
   filters: {
@@ -59,16 +59,20 @@ export default {
     // 获取网络数据
     async getData() {
       let token = localStorage.getItem('token')
+      let cat = 'PHP'
+      if(this.$store.state._param !== ''){
+        cat = this.$store.state._param
+      }
       let formData = new FormData();
       formData.append("token", token);
-      formData.append("cat_name", this.$route.query.cat_name);
+      formData.append("cat_name", cat);
 
       let res = await this.axios.post( "http://116.205.171.139:8080/get_article_list",formData)
       this.blogList = res.data;
       if(this.blogList.length !==0){
         this.isShow = true
       }
-
+      console.log(this.blogList)
     },
     // 点击上一页
     last() {
@@ -119,6 +123,10 @@ export default {
     // 跳转内容页
     toContent(){
       this.$router.push('/content')
+    },
+    // 跳转添加页
+    toAdd(){
+      this.$router.push('/add')
     }
   },
 };
@@ -126,18 +134,25 @@ export default {
 
 <style lang="less" scoped>
 .show {
-  position: absolute;
-  left: 0;
+  position: fixed;
+  left: 168px;
   right: 0;
-  min-height: 100%;
   margin: 80px auto;
-  border: 1px dotted #41b883;
-  padding: 50px 15vw;
+  padding: 50px 100px;
+}
+h2{
+  text-align: center;
+  margin-bottom: 50px;
+  color: #666;
+  font-size: 32px;
 }
 .page {
   margin-top: 30px;
   display: flex;
   justify-content: center;
+  .el-button{
+    margin: 0 100px;
+  }
 }
 
 .itembox {
@@ -166,8 +181,4 @@ export default {
   }
 }
 
-h2{
-  text-align: center;
-  color: #41b883;
-}
 </style>
